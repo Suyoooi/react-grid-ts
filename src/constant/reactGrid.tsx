@@ -7,24 +7,27 @@ import "@silevis/reactgrid/styles.css";
 interface Person {
   name: string;
   surname: string;
+  thirdname: string;
 }
 
-const getPeople = (): Person[] => [
-  { name: "Thomas", surname: "Goldman" },
-  { name: "Susie", surname: "Quattro" },
-  { name: "", surname: "" },
-];
+// const getPeople = (): Person[] => [
+//   { name: "Thomas", surname: "Goldman" },
+//   { name: "Susie", surname: "Quattro" },
+//   { name: "", surname: "" },
+// ];
 
 const getColumns = (): Column[] => [
   { columnId: "name", width: 150 },
   { columnId: "surname", width: 150 },
+  { columnId: "thirdname", width: 150 },
 ];
 
 const headerRow: Row = {
   rowId: "header",
   cells: [
-    { type: "header", text: "Name" },
-    { type: "header", text: "Surname" },
+    { type: "header", text: "srvrAlias" },
+    { type: "header", text: "pendMsgCnt" },
+    { type: "header", text: "fabCd" },
   ],
 };
 
@@ -35,6 +38,7 @@ const getRows = (people: Person[]): Row[] => [
     cells: [
       { type: "text", text: person.name },
       { type: "text", text: person.surname },
+      { type: "text", text: person.thirdname },
     ],
   })),
 ];
@@ -42,27 +46,11 @@ const getRows = (people: Person[]): Row[] => [
 interface Props {}
 
 const ReactGridExample: React.FC<Props> = () => {
-  // const [people] = React.useState<Person[]>(getPeople());
   const [people, setPeople] = useState<Person[]>([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.post("/api/v1/tibco/ems/get/queue", {
-  //         // request data
-  //       });
-  //       setPeople(response.data);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-
   interface QueueData {
     emsServer: {
       srvrAlias: string;
-      fabCd: "string";
+      fabCd: string;
     };
     queue: {
       pendMsgCnt: number;
@@ -87,23 +75,26 @@ const ReactGridExample: React.FC<Props> = () => {
         const xData = response.data.data.map(
           (data: QueueData) => data.emsServer?.srvrAlias
         );
-        const xDataJSON = JSON.stringify(xData);
-        console.log(xDataJSON);
-        const yData = response.data.data.map(
-          (data: QueueData) => data.queue?.pendMsgCnt
+        console.log(xData);
+        const yData = response.data.data.map((data: QueueData) =>
+          JSON.stringify(data.queue?.pendMsgCnt)
         );
-        const yDataJSON = JSON.stringify(yData);
-        console.log(yDataJSON);
-        const ZData = response.data.data.map(
+        const zData = response.data.data.map(
           (data: QueueData) => data.emsServer?.fabCd
         );
-        const ZDataJSON = JSON.stringify(ZData);
-        console.log(ZDataJSON);
-        const people = (): Person[] => [
-          { name: xDataJSON[2], surname: yDataJSON[1] },
-          { name: xDataJSON[4], surname: yDataJSON[2] },
-          { name: xDataJSON[3], surname: yDataJSON[3] },
-        ];
+        console.log(zData);
+        const people = (): Person[] => {
+          const numPeople = Math.min(xData.length, yData.length, zData.length);
+          const peopleArr = [];
+          for (let i = 0; i < numPeople; i++) {
+            peopleArr.push({
+              name: xData[i],
+              surname: yData[i],
+              thirdname: zData[i],
+            });
+          }
+          return peopleArr;
+        };
         setPeople(people);
       })
       .catch((error) => {
