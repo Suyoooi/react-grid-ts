@@ -26,6 +26,7 @@ const getColumns = (): Column[] => [
   { columnId: "fabCd", width: 150 },
 ];
 
+// grid Header
 const headerRow: Row = {
   rowId: "header",
   cells: [
@@ -97,6 +98,12 @@ const ReactGridExample: React.FC<Props> = () => {
         const yData = response.data.data.map((data: QueueData) =>
           JSON.stringify(data.queue?.pendMsgCnt)
         );
+        // Json을 이렇게 표현하면 안됨!
+        // const yData = response.data.data.map(
+        //   (data: QueueData) => data.queue?.pendMsgCnt
+        // );
+        // const yDataJson = JSON.stringify(yData);
+        // console.log(yDataJson);
         const zData = response.data.data.map(
           (data: QueueData) => data.emsServer?.fabCd
         );
@@ -108,7 +115,8 @@ const ReactGridExample: React.FC<Props> = () => {
             zData.length
           );
           const jsonDataArr = [];
-          for (let i = 0; i < numJsonData; i++) {
+          // emsServerApi에서 배열의 마지막 객체 값이 다르기 때문에 numJsonData - 1을 해주었음
+          for (let i = 0; i < numJsonData - 1; i++) {
             jsonDataArr.push({
               fifthname: bData[i],
               fourthname: aData[i],
