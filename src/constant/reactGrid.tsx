@@ -8,23 +8,29 @@ interface JsonData {
   name: string;
   surname: string;
   thirdname: string;
+  fourthname: string;
+  fifthname: string;
 }
 
-const getJsonData = (): JsonData[] => [
-  { name: "", surname: "", thirdname: "" },
-  { name: "", surname: "", thirdname: "" },
-  { name: "", surname: "", thirdname: "" },
-];
+// const getJsonData = (): JsonData[] => [
+//   { name: "name", surname: "surname", thirdname: "thirdname" },
+//   { name: "name", surname: "surname", thirdname: "thirdname" },
+//   { name: "name", surname: "surname", thirdname: "thirdname" },
+// ];
 
 const getColumns = (): Column[] => [
-  { columnId: "name", width: 150 },
-  { columnId: "surname", width: 150 },
-  { columnId: "thirdname", width: 150 },
+  { columnId: "emsQueNm", width: 180 },
+  { columnId: "collectDate", width: 250 },
+  { columnId: "srvrAlias", width: 150 },
+  { columnId: "pendMsgCnt", width: 150 },
+  { columnId: "fabCd", width: 150 },
 ];
 
 const headerRow: Row = {
   rowId: "header",
   cells: [
+    { type: "header", text: "emsQueNm" },
+    { type: "header", text: "collectDate" },
     { type: "header", text: "srvrAlias" },
     { type: "header", text: "pendMsgCnt" },
     { type: "header", text: "fabCd" },
@@ -36,6 +42,8 @@ const getRows = (jsonData: JsonData[]): Row[] => [
   ...jsonData.map<Row>((jsonData, idx) => ({
     rowId: idx,
     cells: [
+      { type: "text", text: jsonData.fifthname },
+      { type: "text", text: jsonData.fourthname },
       { type: "text", text: jsonData.name },
       { type: "text", text: jsonData.surname },
       { type: "text", text: jsonData.thirdname },
@@ -48,12 +56,14 @@ interface Props {}
 const ReactGridExample: React.FC<Props> = () => {
   const [jsonData, setJsonData] = useState<JsonData[]>([]);
   interface QueueData {
+    collectDate: string;
     emsServer: {
       srvrAlias: string;
       fabCd: string;
     };
     queue: {
       pendMsgCnt: number;
+      emsQueNm: string;
     };
   }
   useEffect(() => {
@@ -72,6 +82,14 @@ const ReactGridExample: React.FC<Props> = () => {
     })
       .then((response) => {
         console.log(response.data);
+        const aData = response.data.data.map(
+          (data: QueueData) => data.collectDate
+        );
+        console.log(aData);
+        const bData = response.data.data.map(
+          (data: QueueData) => data.queue?.emsQueNm
+        );
+        console.log(bData);
         const xData = response.data.data.map(
           (data: QueueData) => data.emsServer?.srvrAlias
         );
@@ -92,6 +110,8 @@ const ReactGridExample: React.FC<Props> = () => {
           const jsonDataArr = [];
           for (let i = 0; i < numJsonData; i++) {
             jsonDataArr.push({
+              fifthname: bData[i],
+              fourthname: aData[i],
               name: xData[i],
               surname: yData[i],
               thirdname: zData[i],
