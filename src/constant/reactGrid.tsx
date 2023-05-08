@@ -4,17 +4,17 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import "@silevis/reactgrid/styles.css";
 
-interface Person {
+interface JsonData {
   name: string;
   surname: string;
   thirdname: string;
 }
 
-// const getPeople = (): Person[] => [
-//   { name: "Thomas", surname: "Goldman" },
-//   { name: "Susie", surname: "Quattro" },
-//   { name: "", surname: "" },
-// ];
+const getJsonData = (): JsonData[] => [
+  { name: "", surname: "", thirdname: "" },
+  { name: "", surname: "", thirdname: "" },
+  { name: "", surname: "", thirdname: "" },
+];
 
 const getColumns = (): Column[] => [
   { columnId: "name", width: 150 },
@@ -31,14 +31,14 @@ const headerRow: Row = {
   ],
 };
 
-const getRows = (people: Person[]): Row[] => [
+const getRows = (jsonData: JsonData[]): Row[] => [
   headerRow,
-  ...people.map<Row>((person, idx) => ({
+  ...jsonData.map<Row>((jsonData, idx) => ({
     rowId: idx,
     cells: [
-      { type: "text", text: person.name },
-      { type: "text", text: person.surname },
-      { type: "text", text: person.thirdname },
+      { type: "text", text: jsonData.name },
+      { type: "text", text: jsonData.surname },
+      { type: "text", text: jsonData.thirdname },
     ],
   })),
 ];
@@ -46,7 +46,7 @@ const getRows = (people: Person[]): Row[] => [
 interface Props {}
 
 const ReactGridExample: React.FC<Props> = () => {
-  const [people, setPeople] = useState<Person[]>([]);
+  const [jsonData, setJsonData] = useState<JsonData[]>([]);
   interface QueueData {
     emsServer: {
       srvrAlias: string;
@@ -83,19 +83,23 @@ const ReactGridExample: React.FC<Props> = () => {
           (data: QueueData) => data.emsServer?.fabCd
         );
         console.log(zData);
-        const people = (): Person[] => {
-          const numPeople = Math.min(xData.length, yData.length, zData.length);
-          const peopleArr = [];
-          for (let i = 0; i < numPeople; i++) {
-            peopleArr.push({
+        const jsonData = (): JsonData[] => {
+          const numJsonData = Math.min(
+            xData.length,
+            yData.length,
+            zData.length
+          );
+          const jsonDataArr = [];
+          for (let i = 0; i < numJsonData; i++) {
+            jsonDataArr.push({
               name: xData[i],
               surname: yData[i],
               thirdname: zData[i],
             });
           }
-          return peopleArr;
+          return jsonDataArr;
         };
-        setPeople(people);
+        setJsonData(jsonData);
       })
       .catch((error) => {
         console.log(error);
@@ -103,7 +107,7 @@ const ReactGridExample: React.FC<Props> = () => {
   }, []);
 
   // 열
-  const rows = getRows(people);
+  const rows = getRows(jsonData);
   // 행
   const columns = getColumns();
 
