@@ -12,12 +12,7 @@ interface JsonData {
   fifthname: string;
 }
 
-// const getJsonData = (): JsonData[] => [
-//   { name: "name", surname: "surname", thirdname: "thirdname" },
-//   { name: "name", surname: "surname", thirdname: "thirdname" },
-//   { name: "name", surname: "surname", thirdname: "thirdname" },
-// ];
-
+// Columns
 const getColumns = (): Column[] => [
   { columnId: "emsQueNm", width: 180 },
   { columnId: "collectDate", width: 250 },
@@ -77,7 +72,7 @@ const ReactGridExample: React.FC<Props> = () => {
         fab_cd: "D11",
         fab_loc_cd: "이천",
         st_dt: "2023-04-28T01:00:19.248Z",
-        en_dt: "2023-05-03T17:32:20.000Z",
+        en_dt: "2023-05-30T17:32:20.000Z",
         scroll_size: 100,
       },
     })
