@@ -49,7 +49,7 @@ const getRows = (jsonData: JsonData[]): Row[] => [
 
 interface Props {}
 
-const ReactGridExample: React.FC<Props> = () => {
+const ReactGridTest: React.FC<Props> = () => {
   const [jsonData, setJsonData] = useState<JsonData[]>([]);
 
   // 데이터 추가
@@ -167,4 +167,4 @@ const ReactGridExample: React.FC<Props> = () => {
   );
 };
 
-export default ReactGridExample;
+export default ReactGridTest;
